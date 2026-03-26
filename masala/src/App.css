@@ -125,11 +125,12 @@
   background: var(--text-h);
   border-radius: 10px;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  margin: 3px 0; /* Adding explicit margin for spacing */
 }
 
-.bar.open:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
+.bar.open:nth-child(1) { transform: rotate(45deg) translate(8px, 8px); }
 .bar.open:nth-child(2) { opacity: 0; }
-.bar.open:nth-child(3) { transform: rotate(-45deg) translate(5px, -6px); }
+.bar.open:nth-child(3) { transform: rotate(-45deg) translate(7px, -7px); }
 
 /* Mobile Menu Dropdown */
 .mobile-menu {
@@ -628,8 +629,12 @@ footer {
   .nav-links, .desktop-only {
     display: none !important;
   }
-  .hamburger, .mobile-menu {
-    display: flex;
+  .hamburger {
+    display: flex !important;
+    z-index: 2000;
+  }
+  .mobile-menu {
+    display: flex !important;
   }
   .hero-title-minimal {
     font-size: 2.8rem;

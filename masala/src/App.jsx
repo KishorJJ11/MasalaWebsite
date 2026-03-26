@@ -38,8 +38,16 @@ const fadeIn = {
 };
 
 function Navbar({ scrolled, cartCount }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+
+  // Close menu when route changes
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location]);
+
   return (
-    <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+    <nav className={`navbar ${scrolled ? 'scrolled' : ''} ${menuOpen ? 'menu-open' : ''}`}>
       <div className="container nav-container">
         <Link to="/" className="logo">
           <span className="spice-icon">🌿</span>
@@ -52,13 +60,39 @@ function Navbar({ scrolled, cartCount }) {
           <Link to="/contact" className="nav-link">Contact</Link>
         </div>
         <div className="nav-actions">
-          <Link to="/order" className="cart-icon-wrapper" style={{ marginRight: '1.5rem', textDecoration: 'none' }}>
+          <Link to="/order" className="cart-icon-wrapper desktop-only" style={{ marginRight: '1.5rem', textDecoration: 'none' }}>
              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
           </Link>
-          <Link to="/order" className="btn-navbar" style={{ textDecoration: 'none' }}>Order Now</Link>
+          <Link to="/order" className="btn-navbar desktop-only" style={{ textDecoration: 'none' }}>Order Now</Link>
+          
+          <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle Menu">
+            <div className={`bar ${menuOpen ? 'open' : ''}`}></div>
+            <div className={`bar ${menuOpen ? 'open' : ''}`}></div>
+            <div className={`bar ${menuOpen ? 'open' : ''}`}></div>
+          </button>
         </div>
       </div>
+
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }} 
+            animate={{ opacity: 1, height: 'auto' }} 
+            exit={{ opacity: 0, height: 0 }}
+            className="mobile-menu"
+          >
+            <div className="container mobile-nav-links">
+              <Link to="/" className="mobile-nav-link">Home</Link>
+              <Link to="/collections" className="mobile-nav-link">Collections</Link>
+              <Link to="/about" className="mobile-nav-link">About Us</Link>
+              <Link to="/contact" className="mobile-nav-link">Contact</Link>
+              <Link to="/order" className="mobile-nav-link">Cart & Orders</Link>
+              <Link to="/order" className="btn-primary mobile-order-btn" style={{ textDecoration: 'none', textAlign: 'center' }}>Place New Order</Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }
@@ -391,6 +425,7 @@ function App() {
           <Route path="/order" element={<OrderPage cart={cart} />} />
           <Route path="/cart" element={<OrderPage cart={cart} />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="*" element={<Home onAddToCart={addToCart} />} />
         </Routes>
         <Footer />
       </div>
